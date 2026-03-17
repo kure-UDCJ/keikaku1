@@ -16,41 +16,46 @@
     model-viewer{width:100%;height:70vh;background:#f3f3f3;border-radius:12px}
   </style>
 
-  <!-- Android用：model-viewer を読み込む -->
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 
 <body>
 <div class="box">
+  <h2>AR表示</h2>
 
-<script>
-  const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const isAndroid = /Android/i.test(navigator.userAgent);
+  <script>
+    const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    document.documentElement.classList.toggle('ios', isiOS);
+  </script>
 
-  // ★iPhoneは即Quick Lookへ（白いプレビュー画面を出さない）
-  if (isiOS) {
-    location.replace("https://kure-udcj.github.io/keikaku1/Kure_keikaku1.usdz");
-  }
-</script>
+  <!-- iOS: rel="ar" + img/picture が必須（WebKit要件） -->
+  <div class="ios-only" style="display:none;">
+    <a class="btn"
+       rel="ar"
+       href="https://kure-udcj.github.io/keikaku1/Kure_keikaku1.usdz?v=2">
+      <img src="preview.jpg" alt="iPhone（Quick Look）で開く" style="height:1px;width:1px;opacity:0;">
+      iPhone（Quick Look）で開く
+    </a>
+    <p class="note">※ボタンをタップするとAR Quick Lookが起動し、終了するとこのページに戻ります。</p>
+  </div>
 
-<h2>AR表示</h2>
+  <!-- Android: model-viewer -->
+  <div class="android-only">
+    <model-viewer
+      src="https://kure-udcj.github.io/keikaku1/Kure_keikaku1.glb"
+      ar
+      ar-modes="scene-viewer"
+      camera-controls
+      shadow-intensity="0"
+      alt="3Dモデル">
+    </model-viewer>
+  </div>
 
-<!-- Androidのみ表示される（iPhoneは上で即遷移するためここは見えない） -->
-<model-viewer
-  src="https://kure-udcj.github.io/keikaku1/Kure_keikaku1.glb"
-  ar
-  ar-modes="scene-viewer"
-  camera-controls
-  shadow-intensity="0"
-  alt="3Dモデル">
-</model-viewer>
-
-<p class="note">
-・Android：右下のARアイコン（またはモデル上のAR）をタップして起動します。<br>
-・iPhone：自動でARが起動します。起動しない場合は下のリンクからお試しください。<br><br>
-<a class="btn" href="https://kure-udcj.github.io/keikaku1/Kure_keikaku1.usdz">iPhone（Quick Look）で開く</a>
-</p>
-
+  <script>
+    const isiOS = document.documentElement.classList.contains('ios');
+    document.querySelector('.ios-only').style.display = isiOS ? 'block' : 'none';
+    document.querySelector('.android-only').style.display = isiOS ? 'none' : 'block';
+  </script>
 </div>
 </body>
 </html>
